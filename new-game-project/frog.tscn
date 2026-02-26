@@ -5,9 +5,12 @@
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6ekd3"]
 
-[node name="frog" type="CharacterBody2D" unique_id=341157333 node_paths=PackedStringArray("node_trajectory")]
+[node name="frog" type="CharacterBody2D" unique_id=341157333 node_paths=PackedStringArray("node_trajectory", "node_sprite", "node_ray")]
+collision_mask = 3
 script = ExtResource("1_6ekd3")
 node_trajectory = NodePath("Line2D")
+node_sprite = NodePath("Icon")
+node_ray = NodePath("RayCast2D")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1979638601]
 scale = Vector2(0.15625, 0.15625)
@@ -19,3 +22,8 @@ shape = SubResource("RectangleShape2D_6ekd3")
 [node name="Line2D" type="Line2D" parent="." unique_id=243738168]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1770987379]
+
+[node name="RayCast2D" type="RayCast2D" parent="." unique_id=1569778109]
+target_position = Vector2(1, 0)
+collision_mask = 2
+hit_from_inside = true
