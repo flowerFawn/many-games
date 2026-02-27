@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://ckavqb25bdaul"]
 
-[ext_resource type="PackedScene" uid="uid://dd8c2epymiirf" path="res://frog.tscn" id="1_f3sb7"]
-[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="2_fj7yv"]
+[ext_resource type="PackedScene" uid="uid://dd8c2epymiirf" path="res://frog/frog.tscn" id="1_33nw1"]
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="2_uqhbj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
 size = Vector2(174, 617)
@@ -9,16 +9,20 @@ size = Vector2(174, 617)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tlwt5"]
 size = Vector2(536, 252)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_aqk2v"]
+size = Vector2(98, 52)
+
 [node name="Node2D" type="Node2D" unique_id=1360023096]
 
-[node name="frog" parent="." unique_id=341157333 instance=ExtResource("1_f3sb7")]
-speed = 1.0
+[node name="frog" parent="." unique_id=341157333 instance=ExtResource("1_33nw1")]
+position = Vector2(0, 9)
+speed = 5.0
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1000821989]
 visible = false
 position = Vector2(277.5, 75)
 scale = Vector2(6.3828125, 1)
-texture = ExtResource("2_fj7yv")
+texture = ExtResource("2_uqhbj")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=140024379]
 collision_layer = 2
@@ -31,3 +35,7 @@ shape = SubResource("RectangleShape2D_fj7yv")
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=701527324]
 position = Vector2(276, 199)
 shape = SubResource("RectangleShape2D_tlwt5")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=1271503904]
+position = Vector2(188, -31)
+shape = SubResource("RectangleShape2D_aqk2v")

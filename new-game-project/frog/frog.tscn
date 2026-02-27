@@ -1,23 +1,27 @@
 [gd_scene format=3 uid="uid://dd8c2epymiirf"]
 
-[ext_resource type="Script" uid="uid://cnjhs2sw5vkx6" path="res://scripts/frog.gd" id="1_6ekd3"]
+[ext_resource type="Script" uid="uid://cnjhs2sw5vkx6" path="res://frog/frog.gd" id="1_6ekd3"]
 [ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="1_whe2r"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6ekd3"]
 
-[node name="frog" type="CharacterBody2D" unique_id=341157333 node_paths=PackedStringArray("node_trajectory", "node_sprite", "node_ray")]
+[node name="frog" type="CharacterBody2D" unique_id=341157333 node_paths=PackedStringArray("node_trajectory", "node_sprite", "node_ray", "node_collision")]
 collision_mask = 3
 script = ExtResource("1_6ekd3")
 node_trajectory = NodePath("Line2D")
 node_sprite = NodePath("Icon")
 node_ray = NodePath("RayCast2D")
+node_collision = NodePath("CollisionShape2D")
 
 [node name="Icon" type="Sprite2D" parent="." unique_id=1979638601]
+position = Vector2(0, -10.000002)
 scale = Vector2(0.15625, 0.15625)
 texture = ExtResource("1_whe2r")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1973904560]
+position = Vector2(0, -10)
 shape = SubResource("RectangleShape2D_6ekd3")
+disabled = true
 
 [node name="Line2D" type="Line2D" parent="." unique_id=243738168]
 
