@@ -13,7 +13,7 @@ var u:Vector2 = Vector2.ZERO
 func _physics_process(delta: float) -> void:
 	match state:
 		&"Sit":
-			if get_local_mouse_position().angle() > -0.5 * PI and get_local_mouse_position().angle() < 0:
+			if get_local_mouse_position().angle() > -0.48 * PI and get_local_mouse_position().angle() < 0:
 				show_trajectory()
 		&"Jump":
 			#speed affects both so it follows the same trajectory. make sure you factor this in with t though
@@ -22,7 +22,7 @@ func _physics_process(delta: float) -> void:
 		
 func _input(event: InputEvent) -> void:
 	if event.is_action("jump"):
-		if state == &"Sit" and get_local_mouse_position().angle() > -0.5 * PI and get_local_mouse_position().angle() < 0:
+		if state == &"Sit" and get_local_mouse_position().angle() > -0.48 * PI and get_local_mouse_position().angle() < 0:
 			jump()
 			
 func jump():
