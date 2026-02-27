@@ -1,9 +1,18 @@
 [gd_scene format=3 uid="uid://ckavqb25bdaul"]
 
+[ext_resource type="Shader" uid="uid://cav5a3lpbgjti" path="res://frog/water.gdshader" id="1_a0jiu"]
 [ext_resource type="PackedScene" uid="uid://dd8c2epymiirf" path="res://frog/frog.tscn" id="1_ucma1"]
+[ext_resource type="Texture2D" uid="uid://c77ulclum517y" path="res://frog/water.png" id="2_44buh"]
 [ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="2_k7n5j"]
 [ext_resource type="Texture2D" uid="uid://sxx8lmdnaph5" path="res://frog/lilypad.png" id="3_le7s1"]
 [ext_resource type="Texture2D" uid="uid://d4c5dfkxyqoq2" path="res://frog/log.png" id="4_a0jiu"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_44buh"]
+shader = ExtResource("1_a0jiu")
+shader_parameter/mid_wave = 0.01
+shader_parameter/wave_height = 0.005
+shader_parameter/frequency = 3.0
+shader_parameter/waves = 500.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fj7yv"]
 size = Vector2(174, 26)
@@ -21,6 +30,13 @@ size = Vector2(227, 52)
 distance = -176.0
 
 [node name="Node2D" type="Node2D" unique_id=1360023096]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1317507053]
+texture_repeat = 2
+material = SubResource("ShaderMaterial_44buh")
+position = Vector2(590, 472)
+scale = Vector2(34.242188, 4.6132817)
+texture = ExtResource("2_44buh")
 
 [node name="frog" parent="." unique_id=341157333 instance=ExtResource("1_ucma1")]
 position = Vector2(0, 9)
@@ -55,20 +71,20 @@ shape = SubResource("RectangleShape2D_aqk2v")
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D" unique_id=1371749871]
 shape = SubResource("WorldBoundaryShape2D_le7s1")
 
-[node name="Lilypad" type="Sprite2D" parent="." unique_id=644921983]
+[node name="Lilypad" type="Sprite2D" parent="StaticBody2D" unique_id=644921983]
 position = Vector2(-26, 49)
 texture = ExtResource("3_le7s1")
 
-[node name="Lilypad2" type="Sprite2D" parent="." unique_id=1117992851]
+[node name="Lilypad2" type="Sprite2D" parent="StaticBody2D" unique_id=1117992851]
 position = Vector2(216, 50)
 texture = ExtResource("3_le7s1")
 
-[node name="Lilypad3" type="Sprite2D" parent="." unique_id=1833636945]
+[node name="Lilypad3" type="Sprite2D" parent="StaticBody2D" unique_id=1833636945]
 position = Vector2(401.00003, 33)
 scale = Vector2(0.42, 0.42)
 texture = ExtResource("3_le7s1")
 
-[node name="Log" type="Sprite2D" parent="." unique_id=999500952]
+[node name="Log" type="Sprite2D" parent="StaticBody2D" unique_id=999500952]
 position = Vector2(651, 5)
 scale = Vector2(1.18, 1.18)
 texture = ExtResource("4_a0jiu")
