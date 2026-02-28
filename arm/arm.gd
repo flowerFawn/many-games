@@ -61,6 +61,13 @@ func move_towards_goal_point(goal:Vector2, delta:float) -> void:
 	if (flip_if_short and get_local_mouse_position().length_squared() < (upper_arm_length - fore_arm_length) ** 2):
 		desired_elbow_angle = -desired_elbow_angle
 	var desired_shoulder_angle:float = find_shoulder_angle(goal, desired_elbow_angle)
-	current_shoulder_angle = move_toward(current_shoulder_angle, desired_shoulder_angle, shoulder_flex_speed * delta)
-	current_elbow_angle = move_toward(current_elbow_angle, desired_elbow_angle, elbow_flex_speed * delta)
+	current_shoulder_angle = move_towards_angle(current_shoulder_angle, desired_shoulder_angle, shoulder_flex_speed * delta)
+	current_elbow_angle = move_towards_angle(current_elbow_angle, desired_elbow_angle, elbow_flex_speed * delta)
 	print(current_shoulder_angle, " -> ", current_elbow_angle)
+	
+func move_towards_angle(current:float, desired:float, delta:float) -> float:
+	print(current, desired)
+	if abs(current - desired) > abs(TAU - current + desired):
+		return min(current + delta, desired)
+	else:
+		return max(current - delta, desired)
