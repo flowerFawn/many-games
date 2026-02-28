@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://nifyhf23iqdc"]
+
+[ext_resource type="Script" uid="uid://cwrd35x0drjdj" path="res://arm/arm.gd" id="1_6ytkr"]
+[ext_resource type="Texture2D" uid="uid://4q335xxs2p" path="res://icon.svg" id="2_p8i04"]
+
+[node name="Arm" type="Node2D" unique_id=1312441310 node_paths=PackedStringArray("node_line")]
+script = ExtResource("1_6ytkr")
+node_line = NodePath("Line2D")
+upper_arm_length = 600.0
+fore_arm_length = 300.0
+flip = true
+
+[node name="Line2D" type="Line2D" parent="." unique_id=578303219]
+width = 40.0
+default_color = Color(1, 1, 0.4392157, 1)
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=86871591]
+zoom = Vector2(0.5, 0.5)
+
+[node name="Icon" type="Sprite2D" parent="." unique_id=197110868]
+texture = ExtResource("2_p8i04")

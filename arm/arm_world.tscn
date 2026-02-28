@@ -1,0 +1,8 @@
+[gd_scene format=3 uid="uid://drfqc0r1geoq"]
+
+[ext_resource type="PackedScene" uid="uid://nifyhf23iqdc" path="res://arm/arm.tscn" id="1_pery3"]
+
+[node name="ArmWorld" type="Node2D" unique_id=1511612789]
+
+[node name="Arm" parent="." unique_id=1312441310 instance=ExtResource("1_pery3")]
+flip_by_side = true
