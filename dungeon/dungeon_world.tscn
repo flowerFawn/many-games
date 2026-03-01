@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://bade8x561gaft"]
+
+[ext_resource type="Script" uid="uid://biajfcgccpnb4" path="res://dungeon/dungeon_gen.gd" id="1_dc0v3"]
+[ext_resource type="TileSet" uid="uid://c7rrdyi0pjyo3" path="res://dungeon/dungeon.tres" id="2_gqdhd"]
+
+[node name="Node2D" type="Node2D" unique_id=1514005143 node_paths=PackedStringArray("node_tiles")]
+script = ExtResource("1_dc0v3")
+node_tiles = NodePath("TileMapLayer")
+
+[node name="TileMapLayer" type="TileMapLayer" parent="." unique_id=241628871]
+tile_set = ExtResource("2_gqdhd")
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=757595425]
+position = Vector2(577, 328)
+enabled = false
