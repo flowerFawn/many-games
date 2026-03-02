@@ -9,18 +9,32 @@ func _ready() -> void:
 	generate()
 	
 func generate() -> void:
-	dungeon = DungeonLayout.new(20, 20, Vector2i(0, 0), Vector2i(19, 19))
+	dungeon = DungeonLayout.new(5, 5, Vector2i(0, 0), Vector2i(4, 4))
 	draw_dungeon()
 
 func draw_dungeon() -> void:
+	var room:DungeonRoom
 	const EMPTY:Vector2i = Vector2i(0, 0)
-	const ROOM:Vector2i = Vector2i(1, 0)
+	const N:Vector2i = Vector2i(2, 0)
+	const E:Vector2i = Vector2i(3, 0)
+	const S:Vector2i = Vector2i(4, 0)
+	const W:Vector2i = Vector2i(5, 0)
+	const TREASURE:Vector2i = Vector2i(6, 0)
 	for x in range(dungeon.x_size):
 		for y in range(dungeon.y_size):
-			if dungeon.get_room(Vector2i(x, y)) == null:
+			room = dungeon.get_room(Vector2i(x, y))
+			if room == null:
 				node_tiles.set_cell(Vector2i(x, y), 0, EMPTY)
+			elif room.out_direction == Vector2i(0, 1):
+				node_tiles.set_cell(Vector2i(x,y), 0, S)
+			elif room.out_direction == Vector2i(1, 0):
+				node_tiles.set_cell(Vector2i(x, y), 0, E)
+			elif room.out_direction == Vector2i(0, -1):
+				node_tiles.set_cell(Vector2i(x, y), 0, N)
+			elif room.out_direction == Vector2i(-1, 0):
+				node_tiles.set_cell(Vector2i(x, y), 0, W)
 			else:
-				node_tiles.set_cell(Vector2i(x,y), 0, ROOM)
+				node_tiles.set_cell(Vector2i(x, y), 0, TREASURE)
 			
 
 class DungeonLayout:
@@ -72,12 +86,13 @@ class DungeonLayout:
 			if current_position == start:
 				validity_grid = get_validity_grid()
 			if moves.is_empty():
-				move = -get_room(current_position).direction
+				move = -get_room(current_position).in_direction
 				set_room(current_position, null)
 				current_position += move
 			else:
 				validity_grid[revalidify.x][revalidify.y] = true
 				move = moves.pick_random()
+				get_room(current_position).out_direction = move
 				current_position += move
 			if get_room(current_position) == null:
 				set_room(current_position, DungeonRoom.new(move))
@@ -126,6 +141,7 @@ class DungeonLayout:
 	
 
 class DungeonRoom:
-	var direction:Vector2i
-	func _init(given_direction:Vector2i):
-		direction = given_direction
+	var in_direction:Vector2i
+	var out_direction:Vector2i
+	func _init(given_in_direction:Vector2i):
+		in_direction = given_in_direction
