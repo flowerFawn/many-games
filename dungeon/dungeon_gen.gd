@@ -9,7 +9,7 @@ func _ready() -> void:
 	generate()
 	
 func generate() -> void:
-	dungeon = DungeonLayout.new(5, 5, Vector2i(0, 0), Vector2i(4, 4))
+	dungeon = DungeonLayout.new(6, 6, Vector2i(0, 0), Vector2i(5, 5))
 	draw_dungeon()
 
 func draw_dungeon() -> void:
@@ -37,7 +37,6 @@ class DungeonLayout:
 		end = given_end
 		assert(start.x < x_size and start.y < y_size and start.x >= 0 and start.y >= 0, "start OOB")
 		assert(end.x < x_size and end.y < y_size and end.x >= 0 and end.y >= 0, "end OOB")
-		set_empty_grid()
 		generate_grid()
 		
 	func set_empty_grid() -> void:
@@ -49,24 +48,28 @@ class DungeonLayout:
 			room_grid[i] = y_axis.duplicate()
 		print(room_grid)
 		
+	func get_validity_grid() -> Array[Array]:
+		var validity_grid:Array[Array] = []
+		var y_axis:Array[bool]
+		y_axis.resize(y_size)
+		y_axis.fill(true)
+		validity_grid = []
+		validity_grid.resize(x_size)
+		validity_grid.duplicate()
+		for i:int in range(y_size):
+			validity_grid[i] = y_axis.duplicate()
+		return validity_grid
+		
 	func generate_grid() -> void:
+		set_empty_grid()
+		var validity_grid:Array[Array] = get_validity_grid()
 		var current_position:Vector2i = start
-		var next_move:Vector2i
+		var move:Vector2i
 		while current_position != end:
-			current_position += next_move
-			if current_position == end:
-				set_room(current_position.x, current_position.y, DungeonRoom.new(false, false, false, false))
-				return
-			if r.randf() <= 0.5 and end.x != current_position.x:
-				#on x
-				next_move = Vector2(1, 0) * ((end.x -current_position.x) / abs(end.x -current_position.x))
-			elif end.y != current_position.y:
-				#on y
-				next_move = Vector2i(0, 1) * ((end.y -current_position.y) / abs(end.y -current_position.y))
-			else:
-				#on x again
-				next_move = Vector2(1, 0) * ((end.x -current_position.x) / abs(end.x -current_position.x))
-			set_room(current_position.x, current_position.y, DungeonRoom.new(false, false, false, false))
+			move = get_valid_moves(validity_grid, current_position).pick_random()
+			set_room(current_position.x, current_position.y, DungeonRoom.new(-move))
+			validity_grid[current_position.x][current_position.y] = false
+			current_position += move
 			#for x:int in range(x_size):
 				#for y:int in range(y_size):
 					#set_room(x, y, DungeonRoom.new())
@@ -78,14 +81,48 @@ class DungeonLayout:
 	func get_room(x:int, y:int) -> DungeonRoom:
 		assert(x < x_size and start.y < y_size and start.x >= 0 and start.y >= 0, "OOB")
 		return room_grid[x][y]
+		
+	func get_position_validity(validity_grid:Array[Array], room:Vector2i) -> bool:
+		if not is_position_in_bounds(room):
+			return false
+		else:
+			return validity_grid[room.x][room.y]
+		
+	func get_valid_moves(validity_grid:Array[Array], from_room:Vector2i) -> Array[Vector2i]:
+		var valid_moves:Array[Vector2i]
+		var checked:Vector2i
+		#north
+		print(validity_grid)
+		checked = from_room + Vector2i(0, 1)
+		if is_position_in_bounds(checked):
+			if validity_grid[checked.x][checked.y]:
+				valid_moves.append(Vector2i(0, 1))
+		#east
+		checked = from_room + Vector2i(1, 0)
+		if is_position_in_bounds(checked):
+			if validity_grid[checked.x][checked.y]:
+				valid_moves.append(Vector2i(1, 0))
+		#south
+		checked = from_room + Vector2i(0, -1)
+		if is_position_in_bounds(checked):
+			if validity_grid[checked.x][checked.y]:
+				valid_moves.append(Vector2i(0, -1))
+		#west
+		checked = from_room + Vector2i(-1, 0)
+		if is_position_in_bounds(checked):
+			if validity_grid[checked.x][checked.y]:
+				valid_moves.append(Vector2i(-1, 0))
+		print(valid_moves)
+		return valid_moves
+		
+	func is_position_in_bounds(point:Vector2i) -> bool:
+		if point.x < 0 or point.x >= x_size or point.y < 0 or point.y >= y_size:
+			return false
+		else:
+			return true
+	
 
 class DungeonRoom:
-	var door_north:bool
-	var door_east:bool
-	var door_south:bool
-	var door_west:bool
-	func _init(pn:bool, pe:bool, ps:bool, pw:bool):
-		door_north = pn
-		door_east = pe
-		door_south = ps
-		door_west = pw
+	var backtrack:Vector2i
+	func _init(given_backtrack:Vector2i):
+		backtrack = given_backtrack
