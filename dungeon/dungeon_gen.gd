@@ -9,7 +9,7 @@ func _ready() -> void:
 	generate()
 	
 func generate() -> void:
-	dungeon = DungeonLayout.new(6, 6, Vector2i(0, 0), Vector2i(5, 5))
+	dungeon = DungeonLayout.new(20, 20, Vector2i(0, 0), Vector2i(19, 19))
 	draw_dungeon()
 
 func draw_dungeon() -> void:
@@ -17,7 +17,7 @@ func draw_dungeon() -> void:
 	const ROOM:Vector2i = Vector2i(1, 0)
 	for x in range(dungeon.x_size):
 		for y in range(dungeon.y_size):
-			if dungeon.get_room(x, y) == null:
+			if dungeon.get_room(Vector2i(x, y)) == null:
 				node_tiles.set_cell(Vector2i(x, y), 0, EMPTY)
 			else:
 				node_tiles.set_cell(Vector2i(x,y), 0, ROOM)
@@ -46,7 +46,6 @@ class DungeonLayout:
 		room_grid.resize(x_size)
 		for i:int in range(y_size):
 			room_grid[i] = y_axis.duplicate()
-		print(room_grid)
 		
 	func get_validity_grid() -> Array[Array]:
 		var validity_grid:Array[Array] = []
@@ -65,22 +64,32 @@ class DungeonLayout:
 		var validity_grid:Array[Array] = get_validity_grid()
 		var current_position:Vector2i = start
 		var move:Vector2i
+		var moves:Array[Vector2i]
+		var revalidify:Vector2i
+		set_room(current_position, DungeonRoom.new(Vector2i.ZERO))
 		while current_position != end:
-			move = get_valid_moves(validity_grid, current_position).pick_random()
-			set_room(current_position.x, current_position.y, DungeonRoom.new(-move))
-			validity_grid[current_position.x][current_position.y] = false
-			current_position += move
-			#for x:int in range(x_size):
-				#for y:int in range(y_size):
-					#set_room(x, y, DungeonRoom.new())
+			moves = get_valid_moves(validity_grid, current_position)
+			if current_position == start:
+				validity_grid = get_validity_grid()
+			if moves.is_empty():
+				move = -get_room(current_position).direction
+				set_room(current_position, null)
+				current_position += move
+			else:
+				validity_grid[revalidify.x][revalidify.y] = true
+				move = moves.pick_random()
+				current_position += move
+			if get_room(current_position) == null:
+				set_room(current_position, DungeonRoom.new(move))
+				validity_grid[current_position.x][current_position.y] = false
 		print(room_grid)
 		
-	func set_room(x:int, y:int, value:DungeonRoom) -> void:
-		room_grid[x][y] = value
+	func set_room(pos:Vector2i, value:DungeonRoom) -> void:
+		room_grid[pos.x][pos.y] = value
 	
-	func get_room(x:int, y:int) -> DungeonRoom:
-		assert(x < x_size and start.y < y_size and start.x >= 0 and start.y >= 0, "OOB")
-		return room_grid[x][y]
+	func get_room(pos:Vector2i) -> DungeonRoom:
+		assert(pos.x < x_size and pos.y < y_size and pos.x >= 0 and pos.y >= 0, "OOB")
+		return room_grid[pos.x][pos.y]
 		
 	func get_position_validity(validity_grid:Array[Array], room:Vector2i) -> bool:
 		if not is_position_in_bounds(room):
@@ -92,27 +101,21 @@ class DungeonLayout:
 		var valid_moves:Array[Vector2i]
 		var checked:Vector2i
 		#north
-		print(validity_grid)
 		checked = from_room + Vector2i(0, 1)
-		if is_position_in_bounds(checked):
-			if validity_grid[checked.x][checked.y]:
-				valid_moves.append(Vector2i(0, 1))
+		if get_position_validity(validity_grid, checked):
+			valid_moves.append(Vector2i(0, 1))
 		#east
 		checked = from_room + Vector2i(1, 0)
-		if is_position_in_bounds(checked):
-			if validity_grid[checked.x][checked.y]:
-				valid_moves.append(Vector2i(1, 0))
+		if get_position_validity(validity_grid, checked):
+			valid_moves.append(Vector2i(1, 0))
 		#south
 		checked = from_room + Vector2i(0, -1)
-		if is_position_in_bounds(checked):
-			if validity_grid[checked.x][checked.y]:
-				valid_moves.append(Vector2i(0, -1))
+		if get_position_validity(validity_grid, checked):
+			valid_moves.append(Vector2i(0, -1))
 		#west
 		checked = from_room + Vector2i(-1, 0)
-		if is_position_in_bounds(checked):
-			if validity_grid[checked.x][checked.y]:
-				valid_moves.append(Vector2i(-1, 0))
-		print(valid_moves)
+		if get_position_validity(validity_grid, checked):
+			valid_moves.append(Vector2i(-1, 0))
 		return valid_moves
 		
 	func is_position_in_bounds(point:Vector2i) -> bool:
@@ -123,6 +126,6 @@ class DungeonLayout:
 	
 
 class DungeonRoom:
-	var backtrack:Vector2i
-	func _init(given_backtrack:Vector2i):
-		backtrack = given_backtrack
+	var direction:Vector2i
+	func _init(given_direction:Vector2i):
+		direction = given_direction
